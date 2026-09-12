@@ -28,10 +28,53 @@
     <div class="sky" aria-hidden="true">
       <canvas id="starfield"></canvas>
       <div class="cyber-grid"></div>
+      
+      <!-- Ambient Cosmic Nebulae -->
       <div class="ambient-glow glow--cyan"></div>
       <div class="ambient-glow glow--violet"></div>
       <div class="ambient-glow glow--indigo"></div>
       <div class="ambient-glow glow--rose"></div>
+
+      <!-- Animated Planetary Orbits & Satellites System (Site-Wide) -->
+      <div class="cosmic-orbit-system">
+        <!-- Giant Orbit Alpha (Upper Space) -->
+        <div class="bg-orbit bg-orbit--alpha">
+          <span class="orbiting-satellite sat--cyan"></span>
+          <span class="orbiting-satellite sat--gold"></span>
+        </div>
+        
+        <!-- Tilted Orbit Beta (Mid Space) -->
+        <div class="bg-orbit bg-orbit--beta">
+          <span class="orbiting-satellite sat--purple"></span>
+          <span class="orbiting-satellite sat--emerald"></span>
+        </div>
+
+        <!-- Deep Galaxy Orbit Gamma (Lower Space) -->
+        <div class="bg-orbit bg-orbit--gamma">
+          <span class="orbiting-satellite sat--blue"></span>
+        </div>
+
+        <!-- Floating Planet 1: Ringed Gas Giant (Top-Right) -->
+        <div class="bg-celestial-body celestial--ringed">
+          <div class="celestial-sphere sphere--gas"></div>
+          <div class="celestial-ring ring--gas-outer"></div>
+          <div class="celestial-ring ring--gas-inner"></div>
+          <span class="celestial-moon moon--ringed"></span>
+        </div>
+
+        <!-- Floating Planet 2: Glowing Terrestrial World (Mid-Left) -->
+        <div class="bg-celestial-body celestial--terrestrial">
+          <div class="celestial-sphere sphere--terrestrial"></div>
+          <div class="celestial-glow-aura"></div>
+          <span class="celestial-moon moon--terrestrial"></span>
+        </div>
+
+        <!-- Floating Planet 3: Cyber Ice World (Lower-Right) -->
+        <div class="bg-celestial-body celestial--ice">
+          <div class="celestial-sphere sphere--ice"></div>
+          <div class="celestial-pulse-halo"></div>
+        </div>
+      </div>
       
       <!-- Celestial Twinkles -->
       <span class="star star--one"></span>
@@ -42,6 +85,7 @@
       <span class="star star--six"></span>
       <span class="shooting-star star-stream--one"></span>
       <span class="shooting-star star-stream--two"></span>
+      <span class="shooting-star star-stream--three"></span>
     </div>
 
     <!-- Toast Notification -->
@@ -532,9 +576,105 @@
 
           <!-- PANEL 2: ORGANIZATIONAL & LEADERSHIP EXPERIENCE -->
           <div id="timeline-organization" class="timeline-panel is-hidden" role="tabpanel">
+            
+            <!-- Organization Moments Interactive Slide Gallery -->
+            <div class="org-gallery-showcase">
+              <div class="org-gallery-top">
+                <div class="org-gallery-badge">
+                  <span class="gallery-live-pulse"></span>
+                  <span>MOMENTS &amp; ACTIVITIES GALLERY</span>
+                </div>
+                <div class="org-gallery-nav">
+                  <button type="button" class="gallery-arrow-btn prev" id="gallery-prev" aria-label="Previous slide" title="Previous slide">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                  </button>
+                  <div class="gallery-counter">
+                    <span id="gallery-current">01</span><span class="counter-sep">/</span><span id="gallery-total">05</span>
+                  </div>
+                  <button type="button" class="gallery-arrow-btn next" id="gallery-next" aria-label="Next slide" title="Next slide">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Carousel Viewport -->
+              <div class="org-carousel-viewport" id="org-carousel" tabindex="0" role="region" aria-label="Organizational moments gallery">
+                <div class="org-carousel-track" id="org-carousel-track">
+                  
+                  <!-- Slide 1: HMIF UNSIL -->
+                  <div class="org-carousel-slide is-active" data-slide="0">
+                    <div class="slide-photo-frame spotlight-card">
+                      <img class="slide-real-img" src="assets/gallery/HMIF.png" alt="HMIF UNSIL Activity" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                      <div class="slide-fallback-artwork visual--hmif">
+                        <div class="artwork-mesh"></div>
+                        <div class="artwork-content">
+                        
+                        </div>
+                      </div>
+                      <span class="slide-photo-badge">HMIF UNSIL 2026</span>
+                    </div>
+                  </div>
+
+                  <!-- Slide 2: IT Bootcamp 2026 -->
+                  <div class="org-carousel-slide" data-slide="1">
+                    <div class="slide-photo-frame spotlight-card">
+                      <img class="slide-real-img" src="assets/gallery/IT_Bootcamp.png" alt="IT Bootcamp 2026 Activity" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                      <div class="slide-fallback-artwork visual--bootcamp">
+                        <div class="artwork-mesh"></div>
+                      </div>
+                      <span class="slide-photo-badge">IT BOOTCAMP 2026</span>
+                    </div>
+                  </div>
+
+                  <!-- Slide 3: OMBUS 2026 -->
+                  <div class="org-carousel-slide" data-slide="2">
+                    <div class="slide-photo-frame spotlight-card">
+                      <img class="slide-real-img" src="assets/gallery/ombus.png" alt="OMBUS 2026 Activity" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                      <div class="slide-fallback-artwork visual--ombus">
+                        <div class="artwork-mesh"></div>
+                      </div>
+                      <span class="slide-photo-badge">OMBUS 2026</span>
+                    </div>
+                  </div>
+
+                  <!-- Slide 4: Security Division OMBUS -->
+                  <div class="org-carousel-slide" data-slide="3">
+                    <div class="slide-photo-frame spotlight-card">
+                      <img class="slide-real-img" src="assets/gallery/keamanan.png" alt="Divisi Keamanan OMBUS Activity" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                      <div class="slide-fallback-artwork visual--keamanan">
+                        <div class="artwork-mesh"></div>
+                      </div>
+                      <span class="slide-photo-badge">SECURITY DIVISION 2025</span>
+                    </div>
+                  </div>
+
+                  <!-- Slide 5: Student Orientation Committee 2024-2025 -->
+                  <div class="org-carousel-slide" data-slide="4">
+                    <div class="slide-photo-frame spotlight-card">
+                      <img class="slide-real-img" src="assets/gallery/orientasi.png" alt="Student Orientation Activity" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                      <div class="slide-fallback-artwork visual--orientation">
+                        <div class="artwork-mesh"></div>
+                      </div>
+                      <span class="slide-photo-badge">ORIENTATION 2024–2025</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Pagination Dots -->
+              <div class="org-carousel-dots" id="org-carousel-dots" role="tablist" aria-label="Slides pagination">
+                <button type="button" class="carousel-dot is-active" data-index="0" aria-label="Slide 1: HMIF UNSIL" aria-selected="true"></button>
+                <button type="button" class="carousel-dot" data-index="1" aria-label="Slide 2: IT Bootcamp 2026" aria-selected="false"></button>
+                <button type="button" class="carousel-dot" data-index="2" aria-label="Slide 3: OMBUS 2026" aria-selected="false"></button>
+                <button type="button" class="carousel-dot" data-index="3" aria-label="Slide 4: Security Division OMBUS" aria-selected="false"></button>
+                <button type="button" class="carousel-dot" data-index="4" aria-label="Slide 5: Orientation Committee" aria-selected="false"></button>
+              </div>
+            </div>
+
             <ol class="timeline">
-              <!-- Org Item 1 -->
-              <li class="timeline-item reveal" data-status="active">
+              <!-- Org Item 1 (New) -->
+               <li class="timeline-item reveal" data-status="active">
                 <div class="timeline-badge-wrapper">
                   <div class="timeline-badge badge--pulse-active">
                     <span class="badge-ring ring--outer"></span>
@@ -547,21 +687,126 @@
                     <span class="timeline-date">2026 — PRESENT</span>
                     <span class="timeline-status-pill status--active">
                       <span class="pill-live-dot"></span>
-                      Active Member
+                      Department Head
                     </span>
                   </div>
                   <h3 class="timeline-title">Head of the Household Department (HMIF UNSIL)</h3>
                   <p class="timeline-text">
                     Led the Household Department, overseeing the Spiritual Affairs, Creative Economy, and Secretariat divisions. Coordinated internal programs, member engagement, administrative affairs, and creative initiatives to strengthen organizational cohesion and support the internal development of HMIF UNSIL.
+                  </p>
                   <div class="timeline-tags">
                     <span>Student Association</span>
-                    <span>Tech Workshops</span>
+                    <span>Department Head</span>
                     <span>Collaboration</span>
                   </div>
                 </div>
               </li>
 
-              <!-- Org Item 2 -->
+              <!-- Org Item 2 (New) -->
+              <li class="timeline-item reveal" data-status="completed">
+                <div class="timeline-badge-wrapper">
+                  <div class="timeline-badge badge--pulse-blue">
+                    <span class="badge-ring ring--outer"></span>
+                    <span class="badge-ring ring--middle"></span>
+                    <span class="timeline-dot"></span>
+                  </div>
+                </div>
+                <div class="timeline-card spotlight-card">
+                  <div class="timeline-card-header">
+                    <span class="timeline-date">2026</span>
+                    <span class="timeline-status-pill status--completed">Secretary</span>
+                  </div>
+                  <h3 class="timeline-title">Secretary — Temu Warga Informatika 2026</h3>
+                  <p class="timeline-text">
+                    Managed administrative tasks, prepared meeting documentation and reports, recorded important discussions, and helped organize information and communication throughout the event preparation.
+                  </p>
+                  <div class="timeline-tags">
+                    <span>Administration</span>
+                    <span>Documentation</span>
+                    <span>Communication</span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- Org Item 3 (New) -->
+              <li class="timeline-item reveal" data-status="completed">
+                <div class="timeline-badge-wrapper">
+                  <div class="timeline-badge badge--pulse-purple">
+                    <span class="badge-ring ring--outer"></span>
+                    <span class="badge-ring ring--middle"></span>
+                    <span class="timeline-dot"></span>
+                  </div>
+                </div>
+                <div class="timeline-card spotlight-card">
+                  <div class="timeline-card-header">
+                    <span class="timeline-date">2026</span>
+                    <span class="timeline-status-pill status--completed">Fundraising Coordinator</span>
+                  </div>
+                  <h3 class="timeline-title">Fundraising Division Coordinator — ICONFEST</h3>
+                  <p class="timeline-text">
+                    Coordinated fundraising activities, managed task distribution within the division, and supported the planning and execution of fundraising strategies to help meet the event's financial needs.
+                  </p>
+                  <div class="timeline-tags">
+                    <span>Fundraising</span>
+                    <span>Team Coordination</span>
+                    <span>Financial Planning</span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- Org Item 4 (New) -->
+              <li class="timeline-item reveal" data-status="completed">
+                <div class="timeline-badge-wrapper">
+                  <div class="timeline-badge badge--pulse-orange">
+                    <span class="badge-ring ring--outer"></span>
+                    <span class="badge-ring ring--middle"></span>
+                    <span class="timeline-dot"></span>
+                  </div>
+                </div>
+                <div class="timeline-card spotlight-card">
+                  <div class="timeline-card-header">
+                    <span class="timeline-date">2026</span>
+                    <span class="timeline-status-pill status--completed">Security Coordinator</span>
+                  </div>
+                  <h3 class="timeline-title">Security Division Coordinator — OMBUS 2026</h3>
+                  <p class="timeline-text">
+                    Coordinated the security division in maintaining event safety and order, organized team responsibilities, and ensured security procedures were properly implemented throughout the event.
+                  </p>
+                  <div class="timeline-tags">
+                    <span>Event Security</span>
+                    <span>Team Leadership</span>
+                    <span>Risk Management</span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- Org Item 5 (New) -->
+              <li class="timeline-item reveal" data-status="completed">
+                <div class="timeline-badge-wrapper">
+                  <div class="timeline-badge badge--pulse-green">
+                    <span class="badge-ring ring--outer"></span>
+                    <span class="badge-ring ring--middle"></span>
+                    <span class="timeline-dot"></span>
+                  </div>
+                </div>
+                <div class="timeline-card spotlight-card">
+                  <div class="timeline-card-header">
+                    <span class="timeline-date">2026</span>
+                    <span class="timeline-status-pill status--completed">Field Coordinator</span>
+                  </div>
+                  <h3 class="timeline-title">Field Coordinator — IT Bootcamp 2026</h3>
+                  <p class="timeline-text">
+                     Coordinated field operations during the event, ensured each division followed the activity timeline, and helped maintain smooth communication and coordination throughout the program.
+                  </p>
+                  <div class="timeline-tags">
+                    <span>Event Coordination</span>
+                    <span>Team Coordination</span>
+                    <span>Field Operations</span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- Org Item 6 -->
               <li class="timeline-item reveal" data-status="completed">
                 <div class="timeline-badge-wrapper">
                   <div class="timeline-badge badge--pulse-blue">
@@ -581,13 +826,13 @@
                   </p>
                   <div class="timeline-tags">
                     <span>Event Management</span>
-                    <span>Technical Support</span>
-                    <span>Public Relations</span>
+                    <span>Safety &amp; Security</span>
+                    <span>Student Orientation</span>
                   </div>
                 </div>
               </li>
 
-              <!-- Org Item 3 -->
+              <!-- Org Item 7 -->
               <li class="timeline-item reveal" data-status="completed">
                 <div class="timeline-badge-wrapper">
                   <div class="timeline-badge badge--pulse-purple">
@@ -599,19 +844,18 @@
                 <div class="timeline-card spotlight-card">
                   <div class="timeline-card-header">
                     <span class="timeline-date">2022 — 2024</span>
-                    <span class="timeline-status-pill status--completed">Leadership</span>
+                    <span class="timeline-status-pill status--completed">Sports &amp; Teamwork</span>
                   </div>
                   <h3 class="timeline-title">Volleyball Club — SMAN 2 Tasikmalaya</h3>
                   <p class="timeline-text">
                     Actively participated as a member of the school volleyball club, contributing to team activities, regular training, and school competitions while developing teamwork, discipline, and communication skills.
                   </p>
                   <div class="timeline-tags">
-                    <span>Club Leadership</span>
-                    <span>Peer Mentoring</span>
-                    <span>Web Fundamentals</span>
+                    <span>Teamwork</span>
+                    <span>Discipline</span>
+                    <span>High School</span>
                   </div>
                 </div>
-              </li>
               </li>
             </ol>
           </div>
@@ -633,7 +877,7 @@
 
         <div class="project-grid">
           <!-- PROJECT 01: Nexus Market (Featured) -->
-          <article class="project-card project-card--feature spotlight-card reveal">
+          <article class="project-card spotlight-card reveal">
             <div class="project-browser-bar">
               <div class="browser-dots">
                 <span class="dot-red"></span>
@@ -817,6 +1061,367 @@
               </div>
             </div>
           </article>
+
+          <!-- PROJECT 04: CloudClass -->
+          <article class="project-card spotlight-card reveal">
+            <div class="project-browser-bar">
+              <div class="browser-dots">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="browser-address">cloud-class-eight.vercel.app</div>
+              <span class="project-badge badge--cloud">Cloud Platform</span>
+            </div>
+
+            <div class="project-visual visual--cloud">
+              <div class="visual-glow-mesh"></div>
+              <div class="mockup-preview">
+                <div class="cloud-dashboard-preview">
+                  <div class="cloud-sync-status">
+                    <span class="cloud-status-left">
+                      <span class="cloud-pulse-dot"></span>
+                      <span class="cloud-status-text">Cloud Storage // Sync</span>
+                    </span>
+                    <span class="cloud-storage-stat">78.5 MB / 5.0 GB</span>
+                  </div>
+                  <div class="cloud-sync-bar">
+                    <div class="cloud-sync-progress"></div>
+                  </div>
+                  <div class="cloud-resource-items">
+                    <div class="cloud-item">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                      <span class="cloud-filename">Cloud-Computing-M1.pdf</span>
+                      <span class="sync-check">✓</span>
+                    </div>
+                    <div class="cloud-item">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      <span class="cloud-filename">Syllabus-Distributed.json</span>
+                      <span class="sync-check">✓</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-content">
+              <div class="project-meta-top">
+                <span class="project-number">PROJECT // 04</span>
+                <span class="project-type">Cloud Computing &amp; Courseware</span>
+              </div>
+
+              <h3 class="project-title">CloudClass</h3>
+              <p class="project-description">
+                A distributed cloud-based courseware platform designed to organize and stream academic lectures, syllabus modules, and course PDF resources with real-time cloud object storage sync and role-based access.
+              </p>
+
+              <div class="project-tech-list">
+                <span class="tech-tag">Cloud Architecture</span>
+                <span class="tech-tag">HTML5 &amp; CSS3</span>
+                <span class="tech-tag">Vanilla JS</span>
+                <span class="tech-tag">Storage Buckets</span>
+                <span class="tech-tag">Vercel</span>
+              </div>
+
+              <div class="project-actions">
+                <a
+                  href="https://cloud-class-eight.vercel.app/"
+                  class="project-link project-link--primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span>Live Preview</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- CERTIFICATES & CREDENTIALS SECTION -->
+      <section id="certificates" class="certificates container section">
+        <div class="certificates-top reveal">
+          <div>
+            <p class="eyebrow">05 / CREDENTIALS &amp; CERTIFICATES</p>
+            <h2 class="section-title">Verified skills &amp; <span>certifications.</span></h2>
+          </div>
+          <div class="cert-filters" role="tablist" aria-label="Certificate category filters">
+            <button type="button" class="cert-filter-btn is-active" data-filter="all" role="tab" aria-selected="true">All (6)</button>
+            <button type="button" class="cert-filter-btn" data-filter="tech" role="tab" aria-selected="false">Networking &amp; Security</button>
+            <button type="button" class="cert-filter-btn" data-filter="professional" role="tab" aria-selected="false">Professional &amp; Finance</button>
+            <button type="button" class="cert-filter-btn" data-filter="org" role="tab" aria-selected="false">Leadership &amp; Org</button>
+          </div>
+        </div>
+
+        <div class="certificates-grid" id="certificates-grid">
+          <!-- Cert 1: MikroTik Certified Network Associate (MTCNA) -->
+          <article class="cert-card spotlight-card reveal" data-category="tech">
+            <div class="cert-badge-strip">
+              <span class="cert-pill pill--verified">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified
+              </span>
+              <span class="cert-year">2026</span>
+            </div>
+            <div class="cert-preview">
+              <div class="cert-visual-mesh mesh--cyan"></div>
+              <div class="cert-icon-wrapper">
+                <span class="cert-icon">📡</span>
+              </div>
+              <span class="cert-issuer-tag">MikroTik</span>
+            </div>
+            <div class="cert-content">
+              <h3 class="cert-title">MikroTik Certified Network Associate (MTCNA)</h3>
+              <p class="cert-desc">Certified in RouterOS administration, IPv4 subnetting, dynamic routing protocols, packet filtering firewall rules, bandwidth queues, and wireless network setup.</p>
+              <div class="cert-meta">
+                <span class="cert-id">ID: 2605NA3091</span>
+                <span class="cert-type">International Certification</span>
+              </div>
+              <div class="cert-actions">
+                <button type="button" class="button button--secondary cert-preview-trigger" 
+                  data-cert-title="MikroTik Certified Network Associate (MTCNA)"
+                  data-cert-issuer="MikroTik (Mikrotikls SIA, Latvia)"
+                  data-cert-date="2026-05-18 (Valid for 3 Years)"
+                  data-cert-id="2605NA3091"
+                  data-cert-category="Networking &amp; Infrastructure"
+                  data-cert-desc="Officially recognized as a MikroTik Certified Network Associate (MTCNA). Demonstrates competency in RouterOS configurations, IPv4 routing, firewall packet filtering &amp; NAT, bandwidth queues, wireless network deployment, and network diagnostics."
+                  data-cert-skills="RouterOS, Static &amp; Dynamic Routing, Firewall Security, Bandwidth Queues, Wireless LAN, Network Troubleshooting"
+                  data-cert-img="assets/certificates/cert-mtcna.png"
+                  data-cert-pdf="assets/certificates/MTCNA.pdf"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <span>Preview</span>
+                </button>
+                <a href="https://mikrotik.com/certificates" target="_blank" rel="noopener noreferrer" class="cert-link-btn" title="Validate at mikrotik.com/certificates">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Cert 2: Introduction to Information Security -->
+          <article class="cert-card spotlight-card reveal" data-category="tech">
+            <div class="cert-badge-strip">
+              <span class="cert-pill pill--verified">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified
+              </span>
+              <span class="cert-year">2024</span>
+            </div>
+            <div class="cert-preview">
+              <div class="cert-visual-mesh mesh--blue"></div>
+              <div class="cert-icon-wrapper">
+                <span class="cert-icon">🛡️</span>
+              </div>
+              <span class="cert-issuer-tag">Cyber Academy / Cyber Army</span>
+            </div>
+            <div class="cert-content">
+              <h3 class="cert-title">Introduction to Information Security</h3>
+              <p class="cert-desc">Completed foundational cybersecurity training covering threat vectors, vulnerability assessment, cryptography principles, network defense paradigms, and digital access control.</p>
+              <div class="cert-meta">
+                <span class="cert-id">ID: PKMI01110243722</span>
+                <span class="cert-type">Professional Certificate</span>
+              </div>
+              <div class="cert-actions">
+                <button type="button" class="button button--secondary cert-preview-trigger"
+                  data-cert-title="Introduction to Information Security"
+                  data-cert-issuer="Cyber Academy (Cyber Army Indonesia)"
+                  data-cert-date="October 28, 2024"
+                  data-cert-id="PKMI01110243722"
+                  data-cert-category="Cybersecurity &amp; Defense"
+                  data-cert-desc="Awarded by Cyber Academy (Cyber Army Indonesia) for demonstrating clear comprehension of core information security domains including cyber threat analysis, network defense paradigms, encryption standards, authentication models, and security governance."
+                  data-cert-skills="Information Security, Threat Analysis, Cryptography, Vulnerability Assessment, Security Governance, Network Defense"
+                  data-cert-img="assets/certificates/cert-infosec.png"
+                  data-cert-pdf="assets/certificates/Certificate-of-Completion-Introduction-to-Information-Security.pdf"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <span>Preview</span>
+                </button>
+                <a href="assets/certificates/Certificate-of-Completion-Introduction-to-Information-Security.pdf" target="_blank" rel="noopener noreferrer" class="cert-link-btn" title="View Original PDF Certificate">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Cert 3: Introduction to Financial Literacy -->
+          <article class="cert-card spotlight-card reveal" data-category="professional">
+            <div class="cert-badge-strip">
+              <span class="cert-pill pill--verified">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified
+              </span>
+              <span class="cert-year">2025</span>
+            </div>
+            <div class="cert-preview">
+              <div class="cert-visual-mesh mesh--purple"></div>
+              <div class="cert-icon-wrapper">
+                <span class="cert-icon">💳</span>
+              </div>
+              <span class="cert-issuer-tag">Dicoding &amp; DBS Foundation</span>
+            </div>
+            <div class="cert-content">
+              <h3 class="cert-title">Introduction to Financial Literacy</h3>
+              <p class="cert-desc">Graduated from Coding Camp powered by DBS Foundation, mastering financial decision modeling, smart borrowing risk control, and future wealth planning.</p>
+              <div class="cert-meta">
+                <span class="cert-id">ID: 1RXYQJ56KZVM</span>
+                <span class="cert-type">Competency Certificate</span>
+              </div>
+              <div class="cert-actions">
+                <button type="button" class="button button--secondary cert-preview-trigger"
+                  data-cert-title="Introduction to Financial Literacy"
+                  data-cert-issuer="Dicoding Indonesia &amp; DBS Foundation"
+                  data-cert-date="14 Desember 2025 (Valid to 2028)"
+                  data-cert-id="1RXYQJ56KZVM"
+                  data-cert-category="Professional &amp; Finance"
+                  data-cert-desc="Kelulusan resmi kelas Coding Camp powered by DBS Foundation yang diselenggarakan oleh Dicoding Academy. Menguasai prinsip pengelolaan keuangan masa depan (Decoding Your Financial Future), dasar investasi cerdas (Investing for Your Future), serta manajemen pinjaman dan mitigasi risiko fiskal (Loan Management 101)."
+                  data-cert-skills="Financial Planning, Investment Principles, Risk Analysis, Fiscal Budgeting, Decision Making"
+                  data-cert-img="assets/certificates/cert-financial-literacy.png"
+                  data-cert-pdf="assets/certificates/sertifikat_course_905_4102193_141225235403.pdf"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <span>Preview</span>
+                </button>
+                <a href="https://dicoding.com/certificates/1RXYQJ56KZVM" target="_blank" rel="noopener noreferrer" class="cert-link-btn" title="Verify Online at Dicoding">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Cert 4: HMIF Leadership -->
+          <article class="cert-card spotlight-card reveal" data-category="org">
+            <div class="cert-badge-strip">
+              <span class="cert-pill pill--honor">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Leadership
+              </span>
+              <span class="cert-year">2026</span>
+            </div>
+            <div class="cert-preview">
+              <div class="cert-visual-mesh mesh--gold"></div>
+              <div class="cert-icon-wrapper">
+                <span class="cert-icon">🏛️</span>
+              </div>
+              <span class="cert-issuer-tag">Coming Soon</span>
+            </div>
+            <div class="cert-content">
+              <h3 class="cert-title">SK Kepengurusan — Kepala Departemen Rumah Tangga</h3>
+              <p class="cert-desc">Official appointment and executive tenure overseeing 3 strategic internal divisions within the Informatics Student Association.</p>
+              <div class="cert-meta">
+                <span class="cert-id">ID: SK-HMIF-RT/2026</span>
+                <span class="cert-type">Official Appointment</span>
+              </div>
+              <div class="cert-actions">
+                <button type="button" class="button button--secondary cert-preview-trigger"
+                  data-cert-title="SK Kepengurusan — Kepala Departemen Rumah Tangga"
+                  data-cert-issuer="HMIF Universitas Siliwangi"
+                  data-cert-date="2026"
+                  data-cert-id="SK-HMIF-RT/2026"
+                  data-cert-category="Leadership &amp; Org"
+                  data-cert-desc="Surat Keputusan pengangkatan sebagai Kepala Departemen Rumah Tangga Himpunan Mahasiswa Informatika (HMIF) Universitas Siliwangi periode 2026, memimpin Divisi Kerohanian, Ekonomi Kreatif, dan Kesekretariatan."
+                  data-cert-skills="Department Leadership, Strategic Management, Organizational Governance"
+                  data-cert-img="assets/certificates/cert-hmif-head.jpg"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <span>Preview</span>
+                </button>
+                <a href="#journey" class="cert-link-btn" title="View in Journey">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Cert 5: IT Bootcamp -->
+          <article class="cert-card spotlight-card reveal" data-category="org">
+            <div class="cert-badge-strip">
+              <span class="cert-pill pill--honor">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Appreciation
+              </span>
+              <span class="cert-year">2026</span>
+            </div>
+            <div class="cert-preview">
+              <div class="cert-visual-mesh mesh--emerald"></div>
+              <div class="cert-icon-wrapper">
+                <span class="cert-icon">💻</span>
+              </div>
+              <span class="cert-issuer-tag">Coming Soon</span>
+            </div>
+            <div class="cert-content">
+              <h3 class="cert-title">Certificate of Appreciation — Field Coordinator</h3>
+              <p class="cert-desc">Awarded for outstanding technical field leadership, operational agility, and cross-division coordination during IT Bootcamp 2026.</p>
+              <div class="cert-meta">
+                <span class="cert-id">ID: CERT-ITBC-088</span>
+                <span class="cert-type">Honorary Award</span>
+              </div>
+              <div class="cert-actions">
+                <button type="button" class="button button--secondary cert-preview-trigger"
+                  data-cert-title="Certificate of Appreciation — Field Coordinator"
+                  data-cert-issuer="IT Bootcamp UNSIL Committee"
+                  data-cert-date="2026"
+                  data-cert-id="CERT-ITBC-088"
+                  data-cert-category="Leadership &amp; Org"
+                  data-cert-desc="Piagam penghargaan atas kontribusi dan dedikasi sebagai Koordinator Lapangan (Field Coordinator) dalam penyelenggaraan IT Bootcamp Informatika Universitas Siliwangi 2026."
+                  data-cert-skills="Field Operations, Event Logistics, Crisis Management, Communication"
+                  data-cert-img="assets/certificates/cert-it-bootcamp.jpg"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <span>Preview</span>
+                </button>
+                <a href="#journey" class="cert-link-btn" title="View in Journey">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Cert 6: OMBUS 2025 Panitia & Keamanan -->
+          <article class="cert-card spotlight-card reveal" data-category="org">
+            <div class="cert-badge-strip">
+              <span class="cert-pill pill--honor">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Appreciation
+              </span>
+              <span class="cert-year">2025</span>
+            </div>
+            <div class="cert-preview">
+              <div class="cert-visual-mesh mesh--orange"></div>
+              <div class="cert-icon-wrapper">
+                <span class="cert-icon">🛡️</span>
+              </div>
+              <span class="cert-issuer-tag">Informatika UNSIL</span>
+            </div>
+            <div class="cert-content">
+              <h3 class="cert-title">Sertifikat Panitia — OMBUS Informatika 2025</h3>
+              <p class="cert-desc">Penghargaan resmi atas kontribusi aktif, dedikasi pengawalan keamanan, dan semangat kebersamaan dalam suksesi Orientasi Mahasiswa Baru Informatika UNSIL.</p>
+              <div class="cert-meta">
+                <span class="cert-id">ID: 057/UN58.13/HMJ.../2025</span>
+                <span class="cert-type">Official Committee Certificate</span>
+              </div>
+              <div class="cert-actions">
+                <button type="button" class="button button--secondary cert-preview-trigger"
+                  data-cert-title="Sertifikat Panitia — OMBUS Informatika 2025"
+                  data-cert-issuer="Jurusan Informatika, Universitas Siliwangi"
+                  data-cert-date="Agustus 2025"
+                  data-cert-id="057/UN58.13/HMJ.33.13.4/SERT/OMBUSIF2025/VIII/2025"
+                  data-cert-category="Leadership &amp; Org"
+                  data-cert-desc="Penghargaan resmi yang disahkan oleh Ketua Jurusan Informatika (Ir. Rianto, S.T., M.T.) dan Ketua Himpunan Mahasiswa Informatika atas kontribusi, kekompakan, dan dedikasi sebagai panitia OMBUS 2025."
+                  data-cert-skills="Security Coordination, Crowd Safety, Team Leadership, Event Logistics"
+                  data-cert-img="assets/certificates/cert-ombus2025.png"
+                  data-cert-pdf="assets/certificates/Ombus2025.pdf"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <span>Preview</span>
+                </button>
+                <a href="assets/certificates/Ombus2025.pdf" target="_blank" rel="noopener noreferrer" class="cert-link-btn" title="View Original PDF Certificate">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -825,7 +1430,7 @@
         <div class="wall-card spotlight-card">
           <div class="wall-ambient-aurora" aria-hidden="true"></div>
           <div class="quote-mark" aria-hidden="true">“</div>
-          <p class="eyebrow">05 / PHILOSOPHY</p>
+          <p class="eyebrow">06 / PHILOSOPHY</p>
           <blockquote class="wall-quote">
             Make it work, make it right, then make it memorable.
           </blockquote>
@@ -843,7 +1448,7 @@
           <div class="contact-sparkle-2" aria-hidden="true">✧</div>
           
           <div class="contact-header">
-            <span class="eyebrow">06 / GET IN TOUCH</span>
+            <span class="eyebrow">07 / GET IN TOUCH</span>
             <h2 class="contact-title">Have an idea waiting to <span class="gradient-text">take off?</span></h2>
             <p class="contact-desc">
               My inbox is always open for project inquiries, collaborative ideas, technical consulting, or just a friendly hello.
@@ -877,6 +1482,52 @@
           </div>
         </div>
       </section>
+
+      <!-- Certificate Lightbox Modal -->
+      <div id="cert-modal" class="cert-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-cert-title">
+        <div class="cert-modal-backdrop" id="cert-modal-backdrop"></div>
+        <div class="cert-modal-dialog">
+          <button type="button" class="cert-modal-close" id="cert-modal-close" aria-label="Close certificate preview">&times;</button>
+          <div class="cert-modal-body">
+            <div class="cert-modal-visual" id="modal-cert-visual">
+              <img id="modal-cert-img" class="modal-cert-image" src="" alt="Certificate Preview" onerror="this.style.display='none'; document.querySelector('#modal-cert-placeholder').style.display='flex';" />
+              <div id="modal-cert-placeholder" class="modal-cert-placeholder">
+                <div class="placeholder-mesh"></div>
+                <div class="placeholder-badge">🏆 VERIFIED CREDENTIAL</div>
+                <h4 id="placeholder-title" class="placeholder-title">Certificate Name</h4>
+                <p id="placeholder-issuer" class="placeholder-issuer">Issuing Organization</p>
+                <div class="placeholder-seal">
+                  <span class="seal-icon">✦</span>
+                  <span class="seal-text">AUTHENTIC CERTIFICATE</span>
+                </div>
+              </div>
+            </div>
+            <div class="cert-modal-info">
+              <div class="cert-modal-header">
+                <span id="modal-cert-category" class="cert-pill pill--verified">Web &amp; Software</span>
+                <span id="modal-cert-date" class="modal-date">2025</span>
+              </div>
+              <h3 id="modal-cert-title" class="modal-title">Certificate Name</h3>
+              <p id="modal-cert-issuer" class="modal-issuer">Issued by Organization</p>
+              <p id="modal-cert-desc" class="modal-desc">Description of achievements and syllabus covered.</p>
+              <div class="modal-skills-box">
+                <span class="skills-label">Skills &amp; Competencies:</span>
+                <div id="modal-cert-skills" class="modal-skills-tags"></div>
+              </div>
+              <div class="modal-footer-meta">
+                <div>
+                  <span class="modal-meta-label">Credential Verification:</span>
+                  <span id="modal-cert-id" class="modal-id-code">2605NA3091</span>
+                </div>
+                <a id="modal-cert-pdf-link" href="#" target="_blank" rel="noopener noreferrer" class="cert-pdf-action-link" style="display: none;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  <span>Open PDF</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- FOOTER -->
@@ -928,6 +1579,10 @@
       <a class="dock-link" href="#projects" title="Featured Projects">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         <b>Projects</b>
+      </a>
+      <a class="dock-link" href="#certificates" title="Certificates &amp; Credentials">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        <b>Certificates</b>
       </a>
       <a class="dock-link" href="#contact" title="Get in Touch">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>

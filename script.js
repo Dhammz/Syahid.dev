@@ -259,12 +259,15 @@ document.addEventListener("DOMContentLoaded", () => {
           panel.querySelectorAll(".reveal").forEach((item) => {
             item.classList.add("is-visible");
           });
+          if (targetId === "timeline-organization") {
+            window.dispatchEvent(new CustomEvent("refresh-org-carousel"));
+          }
         }
       });
     });
   });
 
-  // 10. Interactive Constellation Canvas Starfield
+  // 10. Interactive Constellation & Planetary Particles Canvas
   const starfield = document.querySelector("#starfield");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -273,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let width = 0;
     let height = 0;
     let stars = [];
+    let planetParticles = [];
     let comet = null;
     let lastCometTime = 0;
     const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -280,12 +284,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const createStar = () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      radius: Math.random() * 1.5 + 0.3,
-      speed: Math.random() * 0.16 + 0.03,
-      depth: Math.random() * 0.85 + 0.15,
+      radius: Math.random() * 1.1 + 0.35,
+      speed: Math.random() * 0.12 + 0.02,
+      depth: Math.random() * 0.75 + 0.25,
       phase: Math.random() * Math.PI * 2,
-      tint: Math.random() > 0.6 ? "103, 232, 249" : (Math.random() > 0.4 ? "165, 180, 252" : "248, 250, 252"),
+      tint: Math.random() > 0.6 ? "103, 232, 249" : "248, 250, 252",
     });
+
+    // Subtle Floating Celestial Embers (Minimal & Clean)
+    const createPlanetParticle = () => {
+      const colors = [
+        "rgba(34, 211, 238,",   // Soft Cyan
+        "rgba(168, 85, 247,",  // Soft Violet
+        "rgba(52, 211, 153,",   // Soft Emerald
+        "rgba(96, 165, 250,"    // Nebula Blue
+      ];
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 2.2 + 1.2,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: -Math.random() * 0.25 - 0.08,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: Math.random() * 0.35 + 0.15,
+        pulseSpeed: Math.random() * 0.015 + 0.005,
+        pulsePhase: Math.random() * Math.PI * 2,
+        depth: Math.random() * 0.5 + 0.5
+      };
+    };
 
     const resizeStarfield = () => {
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -297,8 +323,13 @@ document.addEventListener("DOMContentLoaded", () => {
       starfield.style.height = `${height}px`;
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-      const targetCount = Math.min(190, Math.max(80, Math.floor((width * height) / 8800)));
+      // Clean, spaced-out stars (Crisp & High-Res)
+      const targetCount = Math.min(50, Math.max(22, Math.floor((width * height) / 32000)));
       stars = Array.from({ length: targetCount }, createStar);
+
+      // Minimal floating embers
+      const particleCount = Math.min(8, Math.max(4, Math.floor((width * height) / 120000)));
+      planetParticles = Array.from({ length: particleCount }, createPlanetParticle);
     };
 
     const spawnComet = () => {
@@ -307,7 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
         y: height * (0.02 + Math.random() * 0.25),
         progress: 0,
         speed: 0.008 + Math.random() * 0.005,
-        length: 100 + Math.random() * 90,
+        length: 110 + Math.random() * 90,
       };
     };
 
@@ -324,15 +355,15 @@ document.addEventListener("DOMContentLoaded", () => {
         currentY - comet.length * 0.78
       );
       grad.addColorStop(0, "rgba(255, 255, 255, 0.98)");
-      grad.addColorStop(0.2, "rgba(103, 232, 249, 0.75)");
-      grad.addColorStop(0.7, "rgba(99, 102, 241, 0.3)");
+      grad.addColorStop(0.25, "rgba(103, 232, 249, 0.75)");
+      grad.addColorStop(0.7, "rgba(99, 102, 241, 0.35)");
       grad.addColorStop(1, "rgba(99, 102, 241, 0)");
 
       ctx.beginPath();
       ctx.moveTo(currentX + comet.length, currentY - comet.length * 0.78);
       ctx.lineTo(currentX, currentY);
       ctx.strokeStyle = grad;
-      ctx.lineWidth = 1.6;
+      ctx.lineWidth = 1.8;
       ctx.stroke();
 
       if (comet.progress > 1.25) comet = null;
@@ -341,11 +372,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const render = (time) => {
       ctx.clearRect(0, 0, width, height);
 
-      // Subtle parallax shift with pointer
-      const shiftX = (pointer.x / width - 0.5) * 22;
-      const shiftY = (pointer.y / height - 0.5) * 14;
+      // Parallax shift with pointer
+      const shiftX = (pointer.x / width - 0.5) * 16;
+      const shiftY = (pointer.y / height - 0.5) * 10;
 
-      // Update and draw stars
+      // 1. Draw crisp twinkling stars
       for (let i = 0; i < stars.length; i++) {
         const star = stars[i];
         star.y -= star.speed;
@@ -354,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
           star.x = Math.random() * width;
         }
 
-        const alpha = 0.18 + ((Math.sin(time * 0.002 + star.phase) + 1) / 2) * 0.68;
+        const alpha = 0.2 + ((Math.sin(time * 0.002 + star.phase) + 1) / 2) * 0.65;
         const posX = star.x + shiftX * star.depth;
         const posY = star.y + shiftY * star.depth;
 
@@ -363,39 +394,66 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fillStyle = `rgba(${star.tint}, ${alpha})`;
         ctx.fill();
 
-        // Constellation Lines: Connect stars when close to cursor
+        // Subtle constellation link only when pointer is very close
         const distToMouse = Math.hypot(posX - pointer.x, posY - pointer.y);
-        if (distToMouse < 110) {
-          const lineAlpha = (1 - distToMouse / 110) * 0.28;
+        if (distToMouse < 85) {
+          const lineAlpha = (1 - distToMouse / 85) * 0.2;
           ctx.beginPath();
           ctx.moveTo(posX, posY);
           ctx.lineTo(pointer.x, pointer.y);
           ctx.strokeStyle = `rgba(103, 232, 249, ${lineAlpha})`;
-          ctx.lineWidth = 0.8;
+          ctx.lineWidth = 0.75;
           ctx.stroke();
-        }
-
-        // Connect nearby stars with delicate constellation lines
-        for (let j = i + 1; j < Math.min(i + 7, stars.length); j++) {
-          const other = stars[j];
-          const oX = other.x + shiftX * other.depth;
-          const oY = other.y + shiftY * other.depth;
-          const dist = Math.hypot(posX - oX, posY - oY);
-
-          if (dist < 75) {
-            const lineAlpha = (1 - dist / 75) * 0.14;
-            ctx.beginPath();
-            ctx.moveTo(posX, posY);
-            ctx.lineTo(oX, oY);
-            ctx.strokeStyle = `rgba(165, 180, 252, ${lineAlpha})`;
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
-          }
         }
       }
 
-      // Spawn periodic comets
-      if (!comet && time - lastCometTime > 4500 + Math.random() * 4000) {
+      // 2. Draw Floating Celestial Embers (Smooth & Soft)
+      for (let p of planetParticles) {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap around borders
+        if (p.y < -10) {
+          p.y = height + 10;
+          p.x = Math.random() * width;
+        }
+        if (p.x < -10) p.x = width + 10;
+        if (p.x > width + 10) p.x = -10;
+
+        // Subtle interactive mouse deflection
+        const dx = (p.x + shiftX * p.depth) - pointer.x;
+        const dy = (p.y + shiftY * p.depth) - pointer.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 140) {
+          const force = (1 - dist / 140) * 0.6;
+          p.x += (dx / dist) * force;
+          p.y += (dy / dist) * force;
+        }
+
+        const currentAlpha = p.alpha * (0.6 + 0.4 * Math.sin(time * p.pulseSpeed + p.pulsePhase));
+        const px = p.x + shiftX * p.depth;
+        const py = p.y + shiftY * p.depth;
+
+        // Radial glow on planet particles
+        const particleGlow = ctx.createRadialGradient(px, py, 0, px, py, p.radius * 2.5);
+        particleGlow.addColorStop(0, `${p.color} ${currentAlpha})`);
+        particleGlow.addColorStop(0.4, `${p.color} ${currentAlpha * 0.6})`);
+        particleGlow.addColorStop(1, `${p.color} 0)`);
+
+        ctx.beginPath();
+        ctx.arc(px, py, p.radius * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = particleGlow;
+        ctx.fill();
+
+        // Inner solid core
+        ctx.beginPath();
+        ctx.arc(px, py, p.radius * 0.8, 0, Math.PI * 2);
+        ctx.fillStyle = `${p.color} ${Math.min(1, currentAlpha * 1.5)})`;
+        ctx.fill();
+      }
+
+      // 3. Spawn and draw periodic comets
+      if (!comet && time - lastCometTime > 4200 + Math.random() * 3800) {
         spawnComet();
         lastCometTime = time;
       }
@@ -413,4 +471,275 @@ document.addEventListener("DOMContentLoaded", () => {
     resizeStarfield();
     requestAnimationFrame(render);
   }
+
+  // 11. Organization Moments Carousel Slider
+  const orgCarousel = document.querySelector("#org-carousel");
+  const orgTrack = document.querySelector("#org-carousel-track");
+  const orgSlides = document.querySelectorAll(".org-carousel-slide");
+  const orgDots = document.querySelectorAll(".carousel-dot");
+  const prevBtn = document.querySelector("#gallery-prev");
+  const nextBtn = document.querySelector("#gallery-next");
+  const currentIndexEl = document.querySelector("#gallery-current");
+  const totalCountEl = document.querySelector("#gallery-total");
+
+  if (orgTrack && orgSlides.length > 0) {
+    let currentSlide = 0;
+    const totalSlides = orgSlides.length;
+    let autoSlideInterval = null;
+
+    if (totalCountEl) {
+      totalCountEl.textContent = String(totalSlides).padStart(2, "0");
+    }
+
+    const updateCarousel = (index) => {
+      currentSlide = (index + totalSlides) % totalSlides;
+      orgTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+      orgSlides.forEach((slide, i) => {
+        slide.classList.toggle("is-active", i === currentSlide);
+      });
+
+      orgDots.forEach((dot, i) => {
+        const isActive = i === currentSlide;
+        dot.classList.toggle("is-active", isActive);
+        dot.setAttribute("aria-selected", String(isActive));
+      });
+
+      if (currentIndexEl) {
+        currentIndexEl.textContent = String(currentSlide + 1).padStart(2, "0");
+      }
+    };
+
+    const startAutoSlide = () => {
+      if (autoSlideInterval) clearInterval(autoSlideInterval);
+      autoSlideInterval = setInterval(() => {
+        updateCarousel(currentSlide + 1);
+      }, 5500);
+    };
+
+    const pauseAutoSlide = () => {
+      if (autoSlideInterval) {
+        clearInterval(autoSlideInterval);
+        autoSlideInterval = null;
+      }
+    };
+
+    const resetAutoSlide = () => {
+      pauseAutoSlide();
+      startAutoSlide();
+    };
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        updateCarousel(currentSlide - 1);
+        resetAutoSlide();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        updateCarousel(currentSlide + 1);
+        resetAutoSlide();
+      });
+    }
+
+    orgDots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        const idx = parseInt(dot.getAttribute("data-index"), 10);
+        if (!isNaN(idx)) {
+          updateCarousel(idx);
+          resetAutoSlide();
+        }
+      });
+    });
+
+    // Touch & Swipe Support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    if (orgCarousel) {
+      orgCarousel.addEventListener("touchstart", (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        pauseAutoSlide();
+      }, { passive: true });
+
+      orgCarousel.addEventListener("touchend", (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) {
+            updateCarousel(currentSlide + 1); // Swipe left -> Next
+          } else {
+            updateCarousel(currentSlide - 1); // Swipe right -> Prev
+          }
+        }
+        startAutoSlide();
+      }, { passive: true });
+
+      orgCarousel.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") {
+          updateCarousel(currentSlide - 1);
+          resetAutoSlide();
+        } else if (e.key === "ArrowRight") {
+          updateCarousel(currentSlide + 1);
+          resetAutoSlide();
+        }
+      });
+
+      orgCarousel.addEventListener("mouseenter", pauseAutoSlide);
+      orgCarousel.addEventListener("mouseleave", startAutoSlide);
+    }
+
+    // Refresh carousel when switching into the organization tab
+    window.addEventListener("refresh-org-carousel", () => {
+      updateCarousel(currentSlide);
+      resetAutoSlide();
+    });
+
+    // Check image loading states
+    document.querySelectorAll(".slide-real-img").forEach((img) => {
+      if (img.complete && img.naturalWidth === 0) {
+        const frame = img.closest(".slide-photo-frame");
+        if (frame) frame.classList.add("has-error");
+      }
+      img.addEventListener("error", () => {
+        const frame = img.closest(".slide-photo-frame");
+        if (frame) frame.classList.add("has-error");
+      });
+      img.addEventListener("load", () => {
+        const frame = img.closest(".slide-photo-frame");
+        if (frame) frame.classList.remove("has-error");
+      });
+    });
+
+    startAutoSlide();
+  }
+
+  // 12. Certificates Filter Tabs
+  const certFilterBtns = document.querySelectorAll(".cert-filter-btn");
+  const certCards = document.querySelectorAll(".cert-card");
+
+  certFilterBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const filter = btn.getAttribute("data-filter");
+
+      certFilterBtns.forEach((b) => {
+        const isActive = b === btn;
+        b.classList.toggle("is-active", isActive);
+        b.setAttribute("aria-selected", String(isActive));
+      });
+
+      certCards.forEach((card) => {
+        const cat = card.getAttribute("data-category");
+        const shouldShow = filter === "all" || cat === filter;
+        card.classList.toggle("is-filtered-out", !shouldShow);
+        if (shouldShow) {
+          card.classList.add("is-visible");
+        }
+      });
+    });
+  });
+
+  // 13. Certificate Lightbox Modal
+  const certModal = document.querySelector("#cert-modal");
+  const certModalClose = document.querySelector("#cert-modal-close");
+  const certModalBackdrop = document.querySelector("#cert-modal-backdrop");
+  const modalImg = document.querySelector("#modal-cert-img");
+  const modalPlaceholder = document.querySelector("#modal-cert-placeholder");
+  const modalTitle = document.querySelector("#modal-cert-title");
+  const modalIssuer = document.querySelector("#modal-cert-issuer");
+  const modalDate = document.querySelector("#modal-cert-date");
+  const modalCategory = document.querySelector("#modal-cert-category");
+  const modalDesc = document.querySelector("#modal-cert-desc");
+  const modalSkills = document.querySelector("#modal-cert-skills");
+  const modalId = document.querySelector("#modal-cert-id");
+  const modalPdfLink = document.querySelector("#modal-cert-pdf-link");
+  const placeholderTitle = document.querySelector("#placeholder-title");
+  const placeholderIssuer = document.querySelector("#placeholder-issuer");
+
+  const openCertModal = (data) => {
+    if (!certModal) return;
+
+    if (modalTitle) modalTitle.textContent = data.title || "Certificate";
+    if (modalIssuer) modalIssuer.textContent = `Issued by ${data.issuer || "Organization"}`;
+    if (modalDate) modalDate.textContent = data.date || "2025";
+    if (modalCategory) modalCategory.textContent = data.category || "Verified";
+    if (modalDesc) modalDesc.textContent = data.desc || "";
+    if (modalId) modalId.textContent = data.id || "VERIFIED-CREDENTIAL";
+
+    if (placeholderTitle) placeholderTitle.textContent = data.title || "Certificate";
+    if (placeholderIssuer) placeholderIssuer.textContent = data.issuer || "Organization";
+
+    // Skills tags
+    if (modalSkills) {
+      modalSkills.innerHTML = "";
+      if (data.skills) {
+        const tags = data.skills.split(",").map((s) => s.trim()).filter(Boolean);
+        tags.forEach((tag) => {
+          const span = document.createElement("span");
+          span.textContent = tag;
+          modalSkills.appendChild(span);
+        });
+      }
+    }
+
+    // Image handling
+    if (modalImg && modalPlaceholder) {
+      if (data.img) {
+        modalImg.src = data.img;
+        modalImg.style.display = "block";
+        modalPlaceholder.style.display = "none";
+      } else {
+        modalImg.style.display = "none";
+        modalPlaceholder.style.display = "flex";
+      }
+    }
+
+    // PDF button handling
+    if (modalPdfLink) {
+      if (data.pdf) {
+        modalPdfLink.href = data.pdf;
+        modalPdfLink.style.display = "inline-flex";
+      } else {
+        modalPdfLink.style.display = "none";
+      }
+    }
+
+    certModal.classList.add("is-open");
+    certModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeCertModal = () => {
+    if (!certModal) return;
+    certModal.classList.remove("is-open");
+    certModal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  };
+
+  const certTriggers = document.querySelectorAll(".cert-preview-trigger");
+  certTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      openCertModal({
+        title: trigger.dataset.certTitle,
+        issuer: trigger.dataset.certIssuer,
+        date: trigger.dataset.certDate,
+        id: trigger.dataset.certId,
+        category: trigger.dataset.certCategory,
+        desc: trigger.dataset.certDesc,
+        skills: trigger.dataset.certSkills,
+        img: trigger.dataset.certImg,
+        pdf: trigger.dataset.certPdf,
+      });
+    });
+  });
+
+  if (certModalClose) certModalClose.addEventListener("click", closeCertModal);
+  if (certModalBackdrop) certModalBackdrop.addEventListener("click", closeCertModal);
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && certModal && certModal.classList.contains("is-open")) {
+      closeCertModal();
+    }
+  });
 });
