@@ -131,6 +131,16 @@ img {
   transition: opacity 0.4s ease;
 }
 
+/* Foreground Interactive Click Particle Canvas Overlay */
+.click-particle-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  pointer-events: none;
+}
+
 /* ==========================================================================
    BACKGROUND COSMIC ATMOSPHERE & CYBER GRID
    ========================================================================== */
@@ -743,6 +753,427 @@ img {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
+}
+
+/* Topbar Tool Buttons (Sound FX & Command Palette) */
+.topbar-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.75rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+}
+
+.topbar-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(34, 211, 238, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(34, 211, 238, 0.18);
+}
+
+/* Sound Bars Visualizer */
+.sound-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+  width: 14px;
+}
+
+.sound-bars .bar {
+  width: 2px;
+  background: var(--cyan);
+  border-radius: 1px;
+  transition: height 0.2s ease, opacity 0.2s ease;
+}
+
+.sound-bars .bar-1 { height: 4px; }
+.sound-bars .bar-2 { height: 11px; }
+.sound-bars .bar-3 { height: 7px; }
+.sound-bars .bar-4 { height: 9px; }
+
+/* Active Playing Animation */
+.sound-toggle.is-playing .sound-bars .bar-1 {
+  animation: soundBarDance 0.8s ease-in-out infinite alternate;
+}
+.sound-toggle.is-playing .sound-bars .bar-2 {
+  animation: soundBarDance 0.6s ease-in-out infinite alternate 0.2s;
+}
+.sound-toggle.is-playing .sound-bars .bar-3 {
+  animation: soundBarDance 0.75s ease-in-out infinite alternate 0.1s;
+}
+.sound-toggle.is-playing .sound-bars .bar-4 {
+  animation: soundBarDance 0.9s ease-in-out infinite alternate 0.3s;
+}
+
+@keyframes soundBarDance {
+  0% { height: 3px; }
+  100% { height: 12px; }
+}
+
+.sound-toggle.is-muted .sound-bars .bar {
+  height: 3px !important;
+  opacity: 0.35;
+  background: var(--text-muted);
+}
+
+.sound-toggle.is-muted {
+  opacity: 0.65;
+}
+
+/* Command Palette Trigger & KBD Badge */
+.cmd-trigger {
+  padding: 0.38rem 0.65rem;
+}
+
+.kbd-badge {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--cyan);
+  background: rgba(34, 211, 238, 0.12);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+/* Profile Real-Time Clock */
+.profile-location-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.profile-clock {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--cyan);
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+   COSMIC COMMAND CENTER / QUICK ACTION HUD (Ctrl+K)
+   ========================================================================== */
+
+.cmd-palette {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12vh 1rem 2rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s;
+}
+
+.cmd-palette.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.cmd-palette-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 7, 18, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.cmd-palette-dialog {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 580px;
+  background: rgba(11, 17, 34, 0.95);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(56, 189, 248, 0.18);
+  overflow: hidden;
+  transform: scale(0.95) translateY(-15px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cmd-palette.is-open .cmd-palette-dialog {
+  transform: scale(1) translateY(0);
+}
+
+.cmd-search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cmd-search-icon {
+  color: var(--cyan);
+  flex-shrink: 0;
+}
+
+.cmd-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.cmd-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.cmd-esc-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 0.2rem 0.45rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.cmd-esc-badge:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.cmd-results {
+  max-height: 52vh;
+  overflow-y: auto;
+  padding: 0.75rem;
+}
+
+.cmd-group {
+  margin-bottom: 0.75rem;
+}
+
+.cmd-group:last-child {
+  margin-bottom: 0;
+}
+
+.cmd-group-title {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.65rem;
+}
+
+.cmd-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.cmd-item:hover,
+.cmd-item.is-focused {
+  background: rgba(56, 189, 248, 0.12);
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+.cmd-item-icon {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.cmd-item-text {
+  flex: 1;
+}
+
+.cmd-item-key,
+.cmd-item-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+}
+
+.cmd-item-badge.badge--cosmic {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.cmd-palette-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1.25rem;
+  background: rgba(6, 10, 22, 0.7);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.cmd-footer-keys {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.cmd-footer-keys kbd {
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  color: var(--cyan);
+  font-size: 0.65rem;
+}
+
+.cmd-footer-brand {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ==========================================================================
+   PERVASIVE HIGH-END MICRO-ANIMATIONS
+   ========================================================================== */
+
+/* Animated Floating Levitation on Badges */
+.float--left-top {
+  animation: floatLevitate 5s ease-in-out infinite alternate;
+}
+.float--left-bottom {
+  animation: floatLevitate 6s ease-in-out infinite alternate 1.5s;
+}
+.float--right-top {
+  animation: floatLevitate 5.5s ease-in-out infinite alternate 0.8s;
+}
+.float--right-bottom {
+  animation: floatLevitate 6.5s ease-in-out infinite alternate 2.2s;
+}
+
+@keyframes floatLevitate {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-9px); }
+}
+
+/* Animated Gradient Headline Text */
+.hero-title .gradient-text {
+  background-size: 200% 200%;
+  animation: gradientShimmer 6s ease infinite;
+}
+
+@keyframes gradientShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Timeline Laser Energy Pulse */
+.timeline-laser-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  background: linear-gradient(180deg, transparent, #22d3ee, #818cf8, transparent);
+  box-shadow: 0 0 16px #22d3ee;
+  animation: laserEnergyWave 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes laserEnergyWave {
+  0% { transform: translateY(-100%); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(1200%); opacity: 0; }
+}
+
+/* Certificate Card Holographic Sheen */
+.cert-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.cert-card::before {
+  content: "";
+  position: absolute;
+  inset: -150% -50%;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.03) 42%,
+    rgba(56, 189, 248, 0.1) 48%,
+    rgba(168, 85, 247, 0.08) 52%,
+    transparent 58%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 3;
+}
+
+.cert-card:hover::before {
+  opacity: 1;
+  animation: holoSheen 1.2s ease-out forwards;
+}
+
+@keyframes holoSheen {
+  0% { transform: translateY(-30%) rotate(25deg); }
+  100% { transform: translateY(30%) rotate(25deg); }
+}
+
+/* Wall Aurora Breathing */
+.wall-ambient-aurora {
+  animation: auroraBreathe 8s ease-in-out infinite alternate;
+}
+
+@keyframes auroraBreathe {
+  0% { transform: scale(1) rotate(0deg); opacity: 0.55; }
+  50% { transform: scale(1.18) rotate(4deg); opacity: 0.85; filter: hue-rotate(15deg); }
+  100% { transform: scale(1.05) rotate(-3deg); opacity: 0.65; }
+}
+
+/* Sparkle Rotating Pulse */
+.contact-sparkle-1, .contact-sparkle-2 {
+  animation: sparkleTwinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes sparkleTwinkle {
+  0% { transform: scale(0.9) rotate(0deg); opacity: 0.4; }
+  50% { transform: scale(1.3) rotate(18deg); opacity: 0.95; }
+  100% { transform: scale(1) rotate(35deg); opacity: 0.6; }
 }
 
 /* ==========================================================================
@@ -3549,48 +3980,72 @@ img {
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.4rem;
+  gap: 0.3rem;
+  padding: 0.4rem 0.5rem;
   border-radius: var(--radius-full);
-  background: rgba(10, 16, 30, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
+  background: rgba(10, 16, 30, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  will-change: transform;
 }
 
 .dock-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 0.85rem;
+  justify-content: center;
+  padding: 0.55rem 0.75rem;
   border-radius: var(--radius-full);
   color: var(--text-muted);
   font-size: 0.78rem;
-  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease, transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  white-space: nowrap;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+}
+
+.dock-link svg {
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .dock-link b {
-  display: none;
+  display: inline-block;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.02em;
+  transition: max-width 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, margin 0.25s ease;
+  margin-left: 0;
+  vertical-align: middle;
 }
 
-.dock-link:hover {
+.dock-link:hover:not(.is-active) {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.12);
   transform: translateY(-2px);
+}
+
+.dock-link:hover svg {
+  transform: scale(1.1);
 }
 
 .dock-link.is-active {
   color: #ffffff;
-  background: linear-gradient(110deg, #0284c7, #4f46e5);
-  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.5);
+  background: linear-gradient(110deg, rgba(2, 132, 199, 0.95), rgba(79, 70, 229, 0.95));
+  box-shadow: 0 4px 18px rgba(79, 70, 229, 0.55), 0 0 10px rgba(56, 189, 248, 0.3);
+  padding: 0.55rem 0.95rem;
 }
 
 .dock-link.is-active b {
-  display: inline-block;
+  max-width: 85px;
+  opacity: 1;
+  margin-left: 0.35rem;
 }
 
 /* ==========================================================================

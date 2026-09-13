@@ -10,6 +10,127 @@ document.addEventListener("DOMContentLoaded", () => {
     yearElement.textContent = new Date().getFullYear();
   }
 
+  // --- Web Audio API Futuristic Synthesizer ---
+  class CosmicAudio {
+    constructor() {
+      this.ctx = null;
+      this.enabled = localStorage.getItem("syahiid_audio_fx") !== "disabled";
+      this.soundBtn = document.querySelector("#sound-toggle-btn");
+      this.cmdSoundStatus = document.querySelector("#cmd-sound-status");
+      this.updateUI();
+    }
+
+    init() {
+      if (!this.ctx && typeof window !== "undefined") {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) this.ctx = new AudioCtx();
+      }
+    }
+
+    updateUI() {
+      if (this.soundBtn) {
+        this.soundBtn.classList.toggle("is-muted", !this.enabled);
+        this.soundBtn.classList.toggle("is-playing", this.enabled);
+        this.soundBtn.setAttribute("title", this.enabled ? "Audio FX: Enabled (Click to mute)" : "Audio FX: Muted (Click to enable)");
+      }
+      if (this.cmdSoundStatus) {
+        this.cmdSoundStatus.textContent = this.enabled ? "ON" : "OFF";
+      }
+    }
+
+    toggle() {
+      this.init();
+      this.enabled = !this.enabled;
+      localStorage.setItem("syahiid_audio_fx", this.enabled ? "enabled" : "disabled");
+      this.updateUI();
+      if (this.enabled) {
+        if (this.ctx && this.ctx.state === "suspended") this.ctx.resume();
+        this.playSuccessSound();
+      }
+      return this.enabled;
+    }
+
+    playHoverSound() {
+      if (!this.enabled) return;
+      this.init();
+      try {
+        if (this.ctx && this.ctx.state === "suspended") this.ctx.resume();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(1400, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.015, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.04);
+      } catch (_) {}
+    }
+
+    playClickSound() {
+      if (!this.enabled) return;
+      this.init();
+      try {
+        if (this.ctx && this.ctx.state === "suspended") this.ctx.resume();
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(640, now);
+        osc.frequency.exponentialRampToValueAtTime(1280, now + 0.06);
+
+        osc2.type = "sine";
+        osc2.frequency.setValueAtTime(960, now);
+
+        gain.gain.setValueAtTime(0.035, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
+
+        osc.connect(gain);
+        osc2.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(now);
+        osc2.start(now);
+        osc.stop(now + 0.07);
+        osc2.stop(now + 0.07);
+      } catch (_) {}
+    }
+
+    playSuccessSound() {
+      if (!this.enabled) return;
+      this.init();
+      try {
+        if (this.ctx && this.ctx.state === "suspended") this.ctx.resume();
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const start = this.ctx.currentTime + idx * 0.06;
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, start);
+          gain.gain.setValueAtTime(0.03, start);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.18);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.18);
+        });
+      } catch (_) {}
+    }
+  }
+
+  const audioFx = new CosmicAudio();
+  window.audioFx = audioFx;
+
+  if (audioFx.soundBtn) {
+    audioFx.soundBtn.addEventListener("click", () => {
+      audioFx.toggle();
+    });
+  }
+
   // 2. Interactive Cursor Glow (Ambient Light Follower)
   const cursorGlow = document.querySelector("#cursor-glow");
   let mousePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -215,12 +336,16 @@ document.addEventListener("DOMContentLoaded", () => {
     statsObserver.observe(statsContainer);
   }
 
-  // 8. Navigation Dock Active Link Sync
+  // 8. Zero-Delay Navigation & Smooth Scroll Controller
   const sections = document.querySelectorAll("main section[id]");
   const dockLinks = document.querySelectorAll(".dock-link");
+  let isNavScrolling = false;
+  let navScrollTimer = null;
 
   const navObserver = new IntersectionObserver(
     (entries) => {
+      if (isNavScrolling) return; // Prevent dock jitter/override while user scrolls programmatically
+
       const activeEntry = entries
         .filter((entry) => entry.isIntersecting)
         .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
@@ -233,10 +358,81 @@ document.addEventListener("DOMContentLoaded", () => {
         link.classList.toggle("is-active", isMatch);
       });
     },
-    { rootMargin: "-30% 0px -50% 0px", threshold: [0, 0.15, 0.4] }
+    { rootMargin: "-25% 0px -45% 0px", threshold: [0, 0.15, 0.4] }
   );
 
   sections.forEach((sec) => navObserver.observe(sec));
+
+  // Ultra-Smooth Zero-Delay Scroll Function
+  const scrollToSection = (targetHash, originLink = null) => {
+    const targetEl = document.querySelector(targetHash);
+    if (!targetEl) return;
+
+    // Instant optimistic dock update (0ms delay!)
+    dockLinks.forEach((link) => {
+      link.classList.toggle("is-active", link.getAttribute("href") === targetHash);
+    });
+
+    if (window.audioFx) window.audioFx.playClickSound();
+
+    isNavScrolling = true;
+    clearTimeout(navScrollTimer);
+
+    const topbar = document.querySelector(".topbar");
+    const topbarHeight = topbar ? topbar.getBoundingClientRect().height : 70;
+    const targetTop = targetHash === "#home" 
+      ? 0 
+      : targetEl.getBoundingClientRect().top + window.pageYOffset - (topbarHeight + 12);
+
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: "smooth"
+    });
+
+    navScrollTimer = setTimeout(() => {
+      isNavScrolling = false;
+    }, 800);
+  };
+  window.scrollToSection = scrollToSection;
+
+  // Intercept clicks on all internal links for instant response
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", (e) => {
+      const href = anchor.getAttribute("href");
+      if (href && href.startsWith("#") && href.length > 1) {
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          scrollToSection(href, anchor);
+          if (history.pushState) {
+            history.pushState(null, null, href);
+          }
+        }
+      }
+    });
+  });
+
+  // Numeric Keyboard Navigation (1=Home, 2=About, 3=Skills, 4=Journey, 5=Projects, 6=Certificates, 7=Contact)
+  const navShortcuts = {
+    "1": "#home",
+    "2": "#about",
+    "3": "#skills",
+    "4": "#journey",
+    "5": "#projects",
+    "6": "#certificates",
+    "7": "#contact"
+  };
+
+  window.addEventListener("keydown", (e) => {
+    // Ignore when typing inside input or textarea
+    if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+    if (navShortcuts[e.key]) {
+      e.preventDefault();
+      scrollToSection(navShortcuts[e.key]);
+    }
+  });
 
   // 9. Journey Category Tabs Switcher (Education vs Organizations)
   const journeyTabBtns = document.querySelectorAll(".journey-tab-btn");
@@ -277,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let height = 0;
     let stars = [];
     let planetParticles = [];
-    let comet = null;
+    let comets = [];
     let lastCometTime = 0;
     const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
@@ -333,40 +529,13 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const spawnComet = () => {
-      comet = {
-        x: width * (0.25 + Math.random() * 0.55),
-        y: height * (0.02 + Math.random() * 0.25),
+      comets.push({
+        x: width * (0.2 + Math.random() * 0.65),
+        y: height * (0.01 + Math.random() * 0.25),
         progress: 0,
-        speed: 0.008 + Math.random() * 0.005,
-        length: 110 + Math.random() * 90,
-      };
-    };
-
-    const drawComet = () => {
-      if (!comet) return;
-      comet.progress += comet.speed;
-      const currentX = comet.x - comet.progress * width * 0.28;
-      const currentY = comet.y + comet.progress * height * 0.36;
-
-      const grad = ctx.createLinearGradient(
-        currentX,
-        currentY,
-        currentX + comet.length,
-        currentY - comet.length * 0.78
-      );
-      grad.addColorStop(0, "rgba(255, 255, 255, 0.98)");
-      grad.addColorStop(0.25, "rgba(103, 232, 249, 0.75)");
-      grad.addColorStop(0.7, "rgba(99, 102, 241, 0.35)");
-      grad.addColorStop(1, "rgba(99, 102, 241, 0)");
-
-      ctx.beginPath();
-      ctx.moveTo(currentX + comet.length, currentY - comet.length * 0.78);
-      ctx.lineTo(currentX, currentY);
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = 1.8;
-      ctx.stroke();
-
-      if (comet.progress > 1.25) comet = null;
+        speed: 0.009 + Math.random() * 0.005,
+        length: 110 + Math.random() * 95,
+      });
     };
 
     const render = (time) => {
@@ -396,13 +565,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Subtle constellation link only when pointer is very close
         const distToMouse = Math.hypot(posX - pointer.x, posY - pointer.y);
-        if (distToMouse < 85) {
-          const lineAlpha = (1 - distToMouse / 85) * 0.2;
+        if (distToMouse < 90) {
+          const lineAlpha = (1 - distToMouse / 90) * 0.25;
           ctx.beginPath();
           ctx.moveTo(posX, posY);
           ctx.lineTo(pointer.x, pointer.y);
           ctx.strokeStyle = `rgba(103, 232, 249, ${lineAlpha})`;
-          ctx.lineWidth = 0.75;
+          ctx.lineWidth = 0.8;
           ctx.stroke();
         }
       }
@@ -452,12 +621,40 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fill();
       }
 
-      // 3. Spawn and draw periodic comets
-      if (!comet && time - lastCometTime > 4200 + Math.random() * 3800) {
+      // 3. Render Comets (Shooting Stars)
+      for (let i = comets.length - 1; i >= 0; i--) {
+        const c = comets[i];
+        c.progress += c.speed;
+        const currentX = c.x - c.progress * width * 0.28;
+        const currentY = c.y + c.progress * height * 0.36;
+
+        const grad = ctx.createLinearGradient(
+          currentX,
+          currentY,
+          currentX + c.length,
+          currentY - c.length * 0.78
+        );
+        grad.addColorStop(0, "rgba(255, 255, 255, 0.98)");
+        grad.addColorStop(0.25, "rgba(103, 232, 249, 0.75)");
+        grad.addColorStop(0.7, "rgba(99, 102, 241, 0.35)");
+        grad.addColorStop(1, "rgba(99, 102, 241, 0)");
+
+        ctx.beginPath();
+        ctx.moveTo(currentX + c.length, currentY - c.length * 0.78);
+        ctx.lineTo(currentX, currentY);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.9;
+        ctx.stroke();
+
+        if (c.progress > 1.3) {
+          comets.splice(i, 1);
+        }
+      }
+
+      if (comets.length === 0 && time - lastCometTime > 4500 + Math.random() * 3500) {
         spawnComet();
         lastCometTime = time;
       }
-      drawComet();
 
       requestAnimationFrame(render);
     };
@@ -470,6 +667,207 @@ document.addEventListener("DOMContentLoaded", () => {
 
     resizeStarfield();
     requestAnimationFrame(render);
+  }
+
+  // --- Foreground Meteor Shower Canvas Overlay ---
+  const clickCanvas = document.querySelector("#click-canvas");
+  if (clickCanvas) {
+    const cCtx = clickCanvas.getContext("2d");
+    let cWidth = window.innerWidth;
+    let cHeight = window.innerHeight;
+    let sparks = [];
+    let meteors = [];
+    let isCanvasLooping = false;
+
+    const resizeClickCanvas = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cWidth = window.innerWidth;
+      cHeight = window.innerHeight;
+      clickCanvas.width = Math.floor(cWidth * dpr);
+      clickCanvas.height = Math.floor(cHeight * dpr);
+      clickCanvas.style.width = `${cWidth}px`;
+      clickCanvas.style.height = `${cHeight}px`;
+      cCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resizeClickCanvas();
+    window.addEventListener("resize", resizeClickCanvas, { passive: true });
+
+    // Draw 4-pointed diamond star
+    const drawDiamondStar = (ctx, cx, cy, radius, innerRadius, color, alpha, angle) => {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      let rot = (Math.PI / 2) * 3 + angle;
+      const step = Math.PI / 4;
+
+      ctx.moveTo(cx + Math.cos(rot) * radius, cy + Math.sin(rot) * radius);
+      for (let i = 0; i < 4; i++) {
+        rot += step;
+        ctx.lineTo(cx + Math.cos(rot) * innerRadius, cy + Math.sin(rot) * innerRadius);
+        rot += step;
+        ctx.lineTo(cx + Math.cos(rot) * radius, cy + Math.sin(rot) * radius);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const animateForegroundCanvas = () => {
+      if (sparks.length === 0 && meteors.length === 0) {
+        cCtx.clearRect(0, 0, cWidth, cHeight);
+        isCanvasLooping = false;
+        return;
+      }
+
+      cCtx.clearRect(0, 0, cWidth, cHeight);
+
+      // 1. Draw stardust particles from meteor trails
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vx *= 0.94;
+        s.vy *= 0.94;
+        s.vy += 0.05; // Gentle cosmic gravity
+        s.rotation += s.rotSpeed;
+        s.alpha -= s.decay;
+
+        if (s.alpha <= 0) {
+          sparks.splice(i, 1);
+          continue;
+        }
+
+        if (s.isStar) {
+          drawDiamondStar(cCtx, s.x, s.y, s.size * 2.2, s.size * 0.6, s.color, s.alpha, s.rotation);
+        } else {
+          cCtx.save();
+          cCtx.globalAlpha = s.alpha;
+          cCtx.beginPath();
+          cCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          cCtx.fillStyle = s.color;
+          cCtx.shadowColor = s.color;
+          cCtx.shadowBlur = 12;
+          cCtx.fill();
+          cCtx.restore();
+        }
+      }
+
+      // 2. Draw Foreground Shooting Meteors
+      for (let i = meteors.length - 1; i >= 0; i--) {
+        const m = meteors[i];
+        m.x += m.vx;
+        m.y += m.vy;
+
+        // Emit sparkling stardust trail
+        if (Math.random() > 0.25) {
+          sparks.push({
+            x: m.x + (Math.random() - 0.5) * 6,
+            y: m.y + (Math.random() - 0.5) * 6,
+            vx: -m.vx * 0.06 + (Math.random() - 0.5) * 2,
+            vy: -m.vy * 0.06 + (Math.random() - 0.5) * 2,
+            size: Math.random() * 2.5 + 1,
+            color: m.glowColor,
+            alpha: 0.9,
+            decay: 0.04,
+            isStar: Math.random() > 0.4,
+            rotation: Math.random() * Math.PI,
+            rotSpeed: 0.15
+          });
+        }
+
+        const hyp = Math.hypot(m.vx, m.vy);
+        const tailX = m.x - (m.vx / hyp) * m.length;
+        const tailY = m.y - (m.vy / hyp) * m.length;
+
+        const grad = cCtx.createLinearGradient(m.x, m.y, tailX, tailY);
+        grad.addColorStop(0, "rgba(255, 255, 255, 0.98)");
+        grad.addColorStop(0.18, `${m.trailColor} 0.9)`);
+        grad.addColorStop(0.6, `${m.trailColor} 0.3)`);
+        grad.addColorStop(1, `${m.trailColor} 0)`);
+
+        cCtx.save();
+        cCtx.beginPath();
+        cCtx.moveTo(m.x, m.y);
+        cCtx.lineTo(tailX, tailY);
+        cCtx.strokeStyle = grad;
+        cCtx.lineWidth = m.thickness;
+        cCtx.lineCap = "round";
+        cCtx.shadowColor = m.glowColor;
+        cCtx.shadowBlur = 18;
+        cCtx.stroke();
+
+        // Glowing meteor head
+        cCtx.beginPath();
+        cCtx.arc(m.x, m.y, m.headRadius, 0, Math.PI * 2);
+        cCtx.fillStyle = "#ffffff";
+        cCtx.shadowColor = m.glowColor;
+        cCtx.shadowBlur = 24;
+        cCtx.fill();
+        cCtx.restore();
+
+        // Out of viewport check
+        if (m.x < -300 || m.y > cHeight + 300) {
+          meteors.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(animateForegroundCanvas);
+    };
+
+    const spawnMeteor = (customX = null, customY = null, customSpeed = null) => {
+      const angle = (140 + (Math.random() - 0.5) * 24) * (Math.PI / 180);
+      const speed = customSpeed || (Math.random() * 8 + 18);
+      const palettes = [
+        { glow: "#22d3ee", trail: "rgba(34, 211, 238," },
+        { glow: "#fbbf24", trail: "rgba(251, 191, 36," },
+        { glow: "#a855f7", trail: "rgba(168, 85, 247," },
+        { glow: "#34d399", trail: "rgba(52, 211, 153," },
+        { glow: "#f43f5e", trail: "rgba(244, 63, 94," }
+      ];
+      const p = palettes[Math.floor(Math.random() * palettes.length)];
+
+      meteors.push({
+        x: customX !== null ? customX : (cWidth * (0.3 + Math.random() * 0.8)),
+        y: customY !== null ? customY : (-40 - Math.random() * 80),
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        length: Math.random() * 160 + 140,
+        thickness: Math.random() * 2 + 2.5,
+        headRadius: Math.random() * 2 + 3,
+        glowColor: p.glow,
+        trailColor: p.trail
+      });
+
+      if (!isCanvasLooping) {
+        isCanvasLooping = true;
+        requestAnimationFrame(animateForegroundCanvas);
+      }
+    };
+
+    const triggerMeteorShower = () => {
+      const total = 14;
+      for (let i = 0; i < total; i++) {
+        setTimeout(() => {
+          const startX = cWidth * (0.2 + (i / total) * 0.9 + (Math.random() - 0.5) * 0.25);
+          const startY = -40 - Math.random() * 100;
+          spawnMeteor(startX, startY, 18 + Math.random() * 10);
+
+          if (window.audioFx && i % 3 === 0) {
+            window.audioFx.playClickSound();
+          }
+        }, i * 190);
+      }
+      if (window.audioFx) window.audioFx.playSuccessSound();
+    };
+    window.triggerMeteorShower = triggerMeteorShower;
+
+    // Optional audio feedback on click (no particles)
+    window.addEventListener("pointerdown", () => {
+      if (window.audioFx) window.audioFx.playClickSound();
+    }, { passive: true });
   }
 
   // 11. Organization Moments Carousel Slider
@@ -740,6 +1138,197 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && certModal && certModal.classList.contains("is-open")) {
       closeCertModal();
+    }
+  });
+
+  // 14. Magnetic Button Physics
+  const magneticEls = document.querySelectorAll(
+    ".button, .header-cv-btn, .topbar-tool-btn, .dock-link, .journey-tab-btn, .cert-filter-btn, .cmd-item"
+  );
+
+  if (!isTouchDevice) {
+    magneticEls.forEach((el) => {
+      el.addEventListener("mousemove", (e) => {
+        const rect = el.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        const pullFactor = 0.2;
+        const pullX = (e.clientX - centerX) * pullFactor;
+        const pullY = (e.clientY - centerY) * pullFactor;
+
+        el.style.transform = `translate3d(${pullX.toFixed(1)}px, ${pullY.toFixed(1)}px, 0)`;
+      }, { passive: true });
+
+      el.addEventListener("mouseleave", () => {
+        el.style.transform = "";
+        el.style.transition = "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+      });
+
+      el.addEventListener("mouseenter", () => {
+        el.style.transition = "transform 0.1s ease-out";
+        if (window.audioFx) window.audioFx.playHoverSound();
+      });
+    });
+  }
+
+  // 15. Real-Time Local Clock (WIB / GMT+7)
+  const localClockEl = document.querySelector("#local-clock");
+  if (localClockEl) {
+    const updateClock = () => {
+      const now = new Date();
+      const options = {
+        timeZone: "Asia/Jakarta",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      };
+      const timeString = new Intl.DateTimeFormat("en-GB", options).format(now);
+      localClockEl.textContent = `🕒 ${timeString} WIB`;
+    };
+    updateClock();
+    setInterval(updateClock, 1000);
+  }
+
+  // 16. Cosmic Command Center / Quick Navigator HUD (Ctrl+K)
+  const cmdPalette = document.querySelector("#cmd-palette");
+  const cmdTrigger = document.querySelector("#cmd-palette-trigger");
+  const cmdBackdrop = document.querySelector("#cmd-palette-backdrop");
+  const cmdCloseBtn = document.querySelector("#cmd-close-btn");
+  const cmdInput = document.querySelector("#cmd-search-input");
+  const cmdItems = document.querySelectorAll(".cmd-item");
+  let focusedIndex = 0;
+
+  const openCmdPalette = () => {
+    if (!cmdPalette) return;
+    cmdPalette.classList.add("is-open");
+    cmdPalette.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    if (cmdInput) {
+      cmdInput.value = "";
+      cmdInput.focus();
+    }
+    filterCmdItems("");
+    if (window.audioFx) window.audioFx.playClickSound();
+  };
+
+  const closeCmdPalette = () => {
+    if (!cmdPalette) return;
+    cmdPalette.classList.remove("is-open");
+    cmdPalette.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  };
+
+  const filterCmdItems = (query) => {
+    const q = query.toLowerCase().trim();
+    let visibleItems = [];
+    cmdItems.forEach((item) => {
+      const text = item.textContent.toLowerCase();
+      const match = !q || text.includes(q);
+      item.style.display = match ? "flex" : "none";
+      if (match) visibleItems.push(item);
+    });
+
+    cmdItems.forEach((it) => it.classList.remove("is-focused"));
+    if (visibleItems.length > 0) {
+      focusedIndex = 0;
+      visibleItems[0].classList.add("is-focused");
+    }
+  };
+
+  if (cmdTrigger) cmdTrigger.addEventListener("click", openCmdPalette);
+  if (cmdBackdrop) cmdBackdrop.addEventListener("click", closeCmdPalette);
+  if (cmdCloseBtn) cmdCloseBtn.addEventListener("click", closeCmdPalette);
+
+  if (cmdInput) {
+    cmdInput.addEventListener("input", (e) => {
+      filterCmdItems(e.target.value);
+    });
+  }
+
+  // Handle Command Item Execution
+  const executeCmdItem = (item) => {
+    if (!item) return;
+    const action = item.dataset.action;
+    const target = item.dataset.target;
+
+    closeCmdPalette();
+
+    if (action === "navigate" && target) {
+      scrollToSection(target);
+    } else if (action === "copy-email") {
+      const email = "syahididham7@gmail.com";
+      if (navigator.clipboard) navigator.clipboard.writeText(email);
+      showToast(`Email (${email}) copied! 📋✨`);
+      if (window.audioFx) window.audioFx.playSuccessSound();
+    } else if (action === "download-cv") {
+      const link = document.createElement("a");
+      link.href = "assets/Syahiid-Idham-CV.pdf";
+      link.download = "Syahiid-Idham-CV.pdf";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      showToast("Downloading Curriculum Vitae... 📄");
+      if (window.audioFx) window.audioFx.playSuccessSound();
+    } else if (action === "toggle-sound") {
+      if (window.audioFx) window.audioFx.toggle();
+    } else if (action === "meteor-shower") {
+      if (typeof window.triggerMeteorShower === "function") {
+        window.triggerMeteorShower();
+        showToast("Cosmic meteor shower unleashed! 🌠✨");
+      }
+    }
+  };
+
+  cmdItems.forEach((item) => {
+    item.addEventListener("click", () => {
+      executeCmdItem(item);
+    });
+  });
+
+  // Global Keydown (Ctrl+K or Cmd+K & Escape)
+  window.addEventListener("keydown", (e) => {
+    // Open Command Palette with Ctrl+K or Cmd+K
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      if (cmdPalette && cmdPalette.classList.contains("is-open")) {
+        closeCmdPalette();
+      } else {
+        openCmdPalette();
+      }
+      return;
+    }
+
+    // Escape closes modals
+    if (e.key === "Escape") {
+      if (cmdPalette && cmdPalette.classList.contains("is-open")) {
+        closeCmdPalette();
+        return;
+      }
+    }
+
+    // Navigation inside Command Palette
+    if (cmdPalette && cmdPalette.classList.contains("is-open")) {
+      const visibleItems = Array.from(cmdItems).filter((it) => it.style.display !== "none");
+      if (visibleItems.length === 0) return;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        visibleItems[focusedIndex].classList.remove("is-focused");
+        focusedIndex = (focusedIndex + 1) % visibleItems.length;
+        visibleItems[focusedIndex].classList.add("is-focused");
+        visibleItems[focusedIndex].scrollIntoView({ block: "nearest" });
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        visibleItems[focusedIndex].classList.remove("is-focused");
+        focusedIndex = (focusedIndex - 1 + visibleItems.length) % visibleItems.length;
+        visibleItems[focusedIndex].classList.add("is-focused");
+        visibleItems[focusedIndex].scrollIntoView({ block: "nearest" });
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        executeCmdItem(visibleItems[focusedIndex]);
+      }
     }
   });
 });
