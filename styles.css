@@ -138,8 +138,8 @@ img {
 .click-particle-canvas {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   z-index: 99999;
   pointer-events: none;
 }
@@ -1131,7 +1131,7 @@ img {
 .cert-card::before {
   content: "";
   position: absolute;
-  inset: -150% -50%;
+  inset: 0;
   background: linear-gradient(
     115deg,
     transparent 35%,
@@ -1140,7 +1140,6 @@ img {
     rgba(168, 85, 247, 0.08) 52%,
     transparent 58%
   );
-  transform: rotate(25deg);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.35s ease;
@@ -1149,12 +1148,6 @@ img {
 
 .cert-card:hover::before {
   opacity: 1;
-  animation: holoSheen 1.2s ease-out forwards;
-}
-
-@keyframes holoSheen {
-  0% { transform: translateY(-30%) rotate(25deg); }
-  100% { transform: translateY(30%) rotate(25deg); }
 }
 
 /* Wall Aurora Breathing */
@@ -1193,6 +1186,7 @@ img {
   padding-top: 5rem;
   padding-bottom: 5rem;
   position: relative;
+  overflow: hidden;
 }
 
 /* Floating Badges on Hero Sides */
@@ -4138,12 +4132,20 @@ img {
     scroll-padding-top: 4.5rem;
   }
 
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
+  }
+
   .container {
     width: min(1180px, calc(100% - 2.4rem));
+    max-width: 100%;
   }
 
   .section {
     padding-block: 4.2rem;
+    overflow-x: clip;
   }
 
   /* Topbar */
@@ -4187,6 +4189,7 @@ img {
     padding-top: 3.5rem;
     padding-bottom: 3.5rem;
     min-height: auto;
+    overflow: hidden;
   }
 
   .hero-title {
@@ -4267,9 +4270,24 @@ img {
     max-width: 100%;
   }
 
+  .timeline {
+    padding-left: 2rem;
+  }
+
+  .timeline-laser-track {
+    left: 10px;
+  }
+
+  .timeline-badge-wrapper {
+    left: -2rem;
+    transform: translateX(10px);
+  }
+
   .org-gallery-showcase {
     padding: 0.9rem;
     margin-bottom: 2rem;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .slide-photo-frame {
@@ -4289,6 +4307,13 @@ img {
   }
 
   /* Projects */
+  .projects-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    margin-bottom: 2rem;
+  }
+
   .project-visual {
     height: 195px;
   }
@@ -4308,14 +4333,20 @@ img {
     align-items: flex-start;
     gap: 1.2rem;
     margin-bottom: 2rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .cert-filters {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     padding: 0.25rem;
+    box-sizing: border-box;
   }
 
   .cert-filters::-webkit-scrollbar {
@@ -4327,9 +4358,39 @@ img {
     flex-shrink: 0;
   }
 
+  /* Wall & Contact cards */
+  .spotlight-card {
+    transform-style: flat;
+  }
+
+  .wall-card {
+    padding: 3.5rem 1.4rem;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .wall-ambient-aurora {
+    width: 100%;
+    max-width: 320px;
+    height: 180px;
+  }
+
+  .contact-card {
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .contact-ambient-glow {
+    width: 100%;
+    max-width: 320px;
+    height: 200px;
+  }
+
   /* Certificate Lightbox Modal */
   .cert-modal {
     padding: 1rem;
+    width: 100%;
+    max-width: 100%;
   }
 
   .cert-modal-dialog {
@@ -4348,6 +4409,8 @@ img {
   /* Command Palette */
   .cmd-palette {
     padding: 6vh 1rem 1.5rem;
+    width: 100%;
+    max-width: 100%;
   }
 
   .cmd-palette-dialog {
@@ -4426,6 +4489,7 @@ img {
 @media (max-width: 480px) {
   .container {
     width: calc(100% - 1.4rem);
+    max-width: 100%;
   }
 
   .section {
@@ -4495,6 +4559,7 @@ img {
   .hero {
     padding-top: 2.8rem;
     padding-bottom: 3rem;
+    overflow: hidden;
   }
 
   .hero-badge {
@@ -4595,15 +4660,16 @@ img {
 
   /* Journey / Timeline */
   .timeline {
-    padding-left: 1.5rem;
+    padding-left: 1.8rem;
   }
 
   .timeline-laser-track {
-    left: 4px;
+    left: 8px;
   }
 
   .timeline-badge-wrapper {
-    left: -1.5rem;
+    left: -1.8rem;
+    transform: translateX(8px);
   }
 
   .timeline-badge {
@@ -4645,6 +4711,8 @@ img {
   .org-gallery-showcase {
     padding: 0.75rem;
     border-radius: var(--radius-md);
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .org-gallery-top {
@@ -4683,6 +4751,13 @@ img {
   }
 
   /* Projects Cards */
+  .projects-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1.8rem;
+  }
+
   .project-visual {
     height: 170px;
   }
@@ -4729,8 +4804,31 @@ img {
   }
 
   /* Certificates Section */
+  .certificates-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.8rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .cert-filters {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0.25rem;
+    box-sizing: border-box;
+  }
+
   .cert-card {
     padding: 1.2rem 1rem;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .cert-preview {
